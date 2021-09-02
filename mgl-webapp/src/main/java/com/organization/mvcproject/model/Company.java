@@ -1,13 +1,11 @@
 
-package com.organization.mvcproject.MGL_Task1.model;
+package com.organization.mvcproject.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-//TODO 1.0 remove @Component annotation, it is not used
-@Component
 public class Company {
 
 	private Long id;
