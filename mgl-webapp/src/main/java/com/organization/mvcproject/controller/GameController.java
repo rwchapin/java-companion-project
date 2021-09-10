@@ -6,46 +6,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.organization.mvcproject.model.Game;
-import com.organization.mvcproject.model.Review;
-import com.organization.mvcproject.service.GameService;
+import com.organization.mvcproject.api.service.GameService;
+import com.organization.mvcproject.model.GameImpl;
+import com.organization.mvcproject.api.model.Game;
 
-@Controller
+@RequestMapping(value ="/game")
+@RestController
 public class GameController {
 
 	
 	@Autowired
 	private GameService gameService;
 
-	
-
-	
-	@RequestMapping(value = "/games", method = RequestMethod.GET)
-	public ModelAndView game() {
-		return new ModelAndView("games", "command", new Game());
-	}
-
 	/**
 	 * TODO 2.0 (Separation of concerns) consider moving all controller endpoints that return a ResponseEntity into a @RestController.
 	 */
 	
-	//TODO 1.0 RequestMapping URL should follow RESTful.
-	@RequestMapping(value = "/game/getAll", method = RequestMethod.GET)
+
+	@GetMapping(value = "/getAll")
 	public ResponseEntity<List<Game>> fetchAllGames() {
 		return new ResponseEntity<List<Game>>(gameService.retrieveAllGames(), HttpStatus.OK);
 	}
 
-	//TODO 1.0 RequestMapping URL should follow RESTful convention
-	@RequestMapping(value = "/game/createGame", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void> createGame(@RequestBody Game game) {
+
+	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> createGame(@RequestBody GameImpl game) {
 		gameService.saveGame(game);
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> updateGame(@RequestBody Game game) {
+		gameService.saveGame(game);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value ="/")
+	public ResponseEntity<?> deleteGame(@PathVariable(value = "id") Long id){
+		
+		return new ResponseEntity<>(gameService.deleteGame(id), HttpStatus.OK);
 	}
 }
